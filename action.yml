@@ -1,0 +1,44 @@
+name: 'Generate GitHub Stats'
+description: 'Generate GitHub statistics images'
+
+inputs:
+  username:
+    description: 'GitHub username to generate stats for'
+    required: true
+  exclude_repos:
+    description: 'Repositories to exclude (comma-separated)'
+    required: false
+    default: ''
+  exclude_langs:
+    description: 'Programming languages to exclude (comma-separated)'
+    required: false
+    default: ''
+
+outputs:
+  stats_path:
+    description: 'Path to the generated stats images'
+    value: ${{ steps.generate.outputs.path }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout action repository
+      uses: actions/checkout@v3
+
+    - name: Set up environment
+      shell: bash
+      run: |
+        echo "USERNAME=${{ inputs.username }}" >> $GITHUB_ENV
+        echo "EXCLUDE_REPOS=${{ inputs.exclude_repos }}" >> $GITHUB_ENV
+        echo "EXCLUDE_LANGS=${{ inputs.exclude_langs }}" >> $GITHUB_ENV
+
+    - name: Generate GitHub Stats
+      id: generate
+      shell: bash
+      run: |
+        # Replace this with your actual stats generation script
+        echo "Generating stats for $USERNAME"
+        # Example: ./generate-stats.sh
+        echo "path=./stats" >> $GITHUB_OUTPUT
+      env:
+        GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
